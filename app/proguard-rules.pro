@@ -1,0 +1,1 @@
+# Nova currently has no custom shrinker rules.
