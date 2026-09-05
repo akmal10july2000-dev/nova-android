@@ -270,3 +270,24 @@ class MainActivity : Activity() {
         private const val KEY_WAKE_PHRASE = "wake_phrase"
     }
 }
+// SpeechRecognizer start karne se pehle volume ko mute karein
+AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+if (audioManager != null) {
+    // SYSTEM aur NOTIFICATION streams ko mute kar rahe hain
+    audioManager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
+    audioManager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
+}
+
+// Aapka purana code jo voice start karta hai
+speechRecognizer.startListening(speechRecognizerIntent);
+
+// Thodi der baad (jaise hi listener active ho jaye) sound ko wapas un-mute karein
+new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+    @Override
+    public void run() {
+        if (audioManager != null) {
+            audioManager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
+            audioManager.setStreamMute(AudioManager.STREAM_NOTIFICATION, false);
+        }
+    }
+}, 500); // 500 milliseconds ka delay
